@@ -1,0 +1,122 @@
+SELECT RPAD('facebookson', 30, '^')
+
+--------------------------------------------------------------------------------------------------------
+
+SELECT LPAD('2000.00', 20, '0') 
+
+--------------------------------------------------------------------------------------------------------
+
+SELECT 
+	nome, frequencia, id
+FROM 	
+	alunos INNER JOIN historico 
+ON 
+	alunos.id = historico.idAluno
+AND 
+	historico.frequencia
+	
+--------------------------------------------------------------------------------------------------------	
+
+
+SELECT 
+	a.nome, a.sobrenome, b.mediafinal
+FROM 	
+	alunos a 
+LEFT JOIN 
+	historico b 
+ON 
+	a.id = b.idAluno
+
+--------------------------------------------------------------------------------------------------------
+	
+	
+SELECT 
+	A.NOME, 
+	B.NOME
+FROM
+	alunos A 
+NATURAL JOIN 
+	historico B
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+SELECT CONCAT(a.nome,' ', a.sobrenome, ' : ', b.idDisciplina, ' - ', b.mediafinal) AS GERAL
+FROM alunos a, historico b
+WHERE b.idAluno = a.id
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+SELECT 
+	id,
+IF (CHAR_LENGTH(NOME) < 40,
+CONCAT (LEFT(nome, 40), '...'), nome) soma
+FROM 
+	alunos
+
+--------------------------------------------------------------------------------------------------------
+
+	
+	
+SELECT REPLACE('Fatec Araras', 'a', '@')
+
+--------------------------------------------------------------------------------------------------------
+
+
+SELECT day(CURRENT_DATE()) AS Dia,
+		 month(CURRENT_DATE()) AS Mes,
+		 year(CURRENT_DATE()) AS Ano
+		 
+--------------------------------------------------------------------------------------------------------		 
+
+
+ALTER TABLE alunos
+ADD sobrenome VARCHAR(40);
+
+
+--------------------------------------------------------------------------------------------------------		 
+
+CREATE DATABASE atividade;
+
+CREATE TABLE cargos(
+	idCargos INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	descricao VARCHAR(60) NOT NULL,
+	salario DECIMAL(10,2) NOT NULL
+
+);
+
+CREATE TABLE funcionario(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	nome VARCHAR(60) NOT NULL,
+	idCargo INT NOT NULL,
+	FOREIGN KEY (idCargo) REFERENCES cargos(idCargos)
+);
+
+INSERT INTO cargos VALUES (NULL,"Suporte",1500),(NULL,"Limpeza",2000),(NULL,"Vendedor",3000),(NULL,"Gerente",5000)
+
+INSERT INTO funcionario VALUES (NULL,"Jorge",1), (NULL,"Cleber",1), (NULL,"Robson",2), (NULL,"Roberto",2), (NULL,"Vitor",3), (NULL,"Fernando",3), (NULL,"Joaquina",4), (NULL,"Amanda",4)
+
+SELECT * FROM funcionario;
+
+SELECT f.id,f.nome,c.idCargos,c.descricao,c.salario FROM funcionario f, cargos c WHERE c.descricao="Gerente";
+
+SELECT * FROM cargos;
+
+SELECT f.id,f.nome,c.salario FROM funcionario f, cargos c WHERE f.id=5;
+
+SELECT SUM(salario) as Salarios FROM cargos;
+
+SELECT COUNT(*) as Funcionarios FROM funcionario;
+
+SELECT SUM(salario) as Salarios FROM cargos c,funcionario f WHERE f.idCargo=c.idCargos;
+
+SELECT AVG(salario) AS Media FROM cargos;
+
+SELECT MIN(salario) AS Menor, MAX(salario) AS Maior FROM cargos;
+
+SELECT c.descricao, SUM(salario) as Salarios FROM cargos c,funcionario f WHERE f.idCargo=c.idCargos GROUP BY descricao;
+

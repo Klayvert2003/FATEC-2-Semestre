@@ -1,0 +1,96 @@
+1- R: Sim, trabalho com isso. Não sou muito experiente ainda, mas espero aprofundar e conhecer mais do assunto.
+
+
+2-R: Aprimorar meus conhecimento em SQL.
+
+
+SELECT 
+    NOME
+FROM
+    funcionario
+
+
+
+SELECT 
+    f.NOME,
+    c.Descricao
+FROM
+    funcionario f, 
+    cargos c
+WHERE
+    cargos = 'Gerente'
+
+
+SELECT
+    Descricao
+FROM
+    cargos
+
+
+SELECT
+    c.Salario, 
+    f.id
+FROM
+    cargos c, 
+    funcionario f
+WHERE
+    id = 5
+
+
+
+SELECT
+    SUM(c.Salario),
+    f.NOME
+FROM
+    cargos c, 
+    funcionario f
+
+
+
+
+SELECT
+    AVG(c.Salario),
+    f.NOME
+FROM
+    cargos c, funcionario f
+
+
+
+
+SELECT
+    MAX(c.Salario),
+    MIN(c.Salario),
+    f.NOME
+FROM
+    cargos c, funcionario f
+
+
+
+
+
+
+SELECT
+    Count(NOME)
+FROM
+    funcionario
+
+
+
+
+
+
+
+
+
+SELECT
+    SUM(c.Salario),
+    c.Descricao
+FROM
+    cargos c
+WHERE 
+    Descricao = 1
+    Descricao = 2
+    Descricao = 3
+    Descricao = 4
+    Descricao = 5
+    Descricao = 6

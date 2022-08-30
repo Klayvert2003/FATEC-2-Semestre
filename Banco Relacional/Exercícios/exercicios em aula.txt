@@ -1,0 +1,82 @@
+1)
+SELECT
+	c.nome,
+	r.nome	
+FROM 
+	cliente AS C
+INNER JOIN representante as r
+ON c.id = r.id
+ORDER BY r.id
+
+
+2)
+
+
+SELECT 
+	* 
+FROM 
+	pedido
+WHERE 
+ 	datentrega = '2019-04-10'
+ 	
+ 	
+ 	
+SELECT 
+	*
+FROM 
+	pedido
+WHERE 
+	id = (SELECT MAX(id) FROM pedido)
+	
+	
+	
+SELECT 
+	*
+FROM 
+	pedido
+ORDER BY id DESC 
+LIMIT 1
+	
+
+
+3)
+SELECT 
+	*
+FROM 
+	pedido
+WHERE 
+	datemissao < (SELECT MAX(datemissao) FROM pedido)
+	
+
+4)
+SELECT
+	c.id,
+	c.nome,
+	c.telefone
+FROM
+	cliente c
+INNER JOIN pedido p
+ON c.id = p.id
+WHERE
+	datemissao = (SELECT MIN(datemissao) FROM pedido)
+ORDER BY 
+	p.id
+
+
+
+5)
+SELECT
+	c.id,
+	p.datemissao,
+	pr.precodevenda
+FROM
+	cliente c
+INNER JOIN 
+	pedido p
+ON c.id = p.id
+WHERE
+	datemissao = (SELECT MIN(datemissao) FROM pedido)
+ORDER BY 
+	p.id
+	
+	
