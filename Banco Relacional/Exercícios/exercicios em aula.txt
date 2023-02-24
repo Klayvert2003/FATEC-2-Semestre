@@ -66,17 +66,100 @@ ORDER BY
 
 5)
 SELECT
-	c.id,
-	p.datemissao,
-	pr.precodevenda
+	MAX(p.id) AS IdCliente,
+	MAX(p.datemissao) AS DataEmissao,
+	SUM(i.precounitario * i.quantidade) AS ValorTotal
 FROM
-	cliente c
+		pedido p
 INNER JOIN 
-	pedido p
-ON c.id = p.id
-WHERE
-	datemissao = (SELECT MIN(datemissao) FROM pedido)
-ORDER BY 
+	item i
+ON p.id = i.idpedido
+GROUP BY 
 	p.id
 	
-	
+
+6)
+
+SELECT
+	id
+FROM
+	produto p
+WHERE
+	p.id NOT IN (SELECT idproduto FROM item)
+
+
+7)
+
+SELECT
+	id
+FROM
+	produto p
+WHERE
+	p.id IN (SELECT idproduto FROM item)
+
+8)
+
+
+SELECT 
+	i.quantidade,
+	p.idcliente
+FROM 
+	item i
+INNER JOIN
+	pedido p
+ON p.idcliente = i.idpedido
+ORDER BY
+p.idcliente
+
+
+9)
+
+
+SELECT 
+	i.quantidade,
+	f.id
+FROM 
+	item i
+INNER JOIN
+	formapagto f
+ON i.idpedido = f.id
+ORDER BY f.id
+
+
+10)
+
+SELECT 
+	p.id,
+	p.idformapagto,
+	p.datemissao,
+	f.descricao
+FROM
+	pedido p
+INNER JOIN
+	formapagto f
+ON f.id = p.id
+WHERE datemissao BETWEEN '2019-01-01' AND '2019-06-30'
+ORDER BY p.id
+
+
+11)
+
+
+SELECT 
+	c.id,
+	c.nome,
+	p.idcliente
+FROM
+	cliente c
+INNER JOIN
+	pedido p
+ON 
+	p.id = c.id
+WHERE 
+	p.id NOT IN (SELECT id FROM pedido p)
+
+
+12)
+
+
+

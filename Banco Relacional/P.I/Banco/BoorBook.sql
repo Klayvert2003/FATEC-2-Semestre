@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Servidor:                     127.0.0.1
--- Versão do servidor:           10.4.24-MariaDB - mariadb.org binary distribution
+-- Versão do servidor:           10.4.25-MariaDB - mariadb.org binary distribution
 -- OS do Servidor:               Win64
 -- HeidiSQL Versão:              12.1.0.6537
 -- --------------------------------------------------------
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   PRIMARY KEY (`id_book`),
   UNIQUE KEY `isbn10` (`isbn10`),
   UNIQUE KEY `isbn13` (`isbn13`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 -- Exportação de dados foi desmarcado.
 
@@ -42,32 +42,30 @@ CREATE TABLE IF NOT EXISTS `book_user` (
   `date_boor` date DEFAULT NULL,
   `date_devolution` date DEFAULT NULL,
   `id_book` int(11) DEFAULT NULL,
-  `cpf` int(11) DEFAULT NULL,
+  `id_user` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_control`),
   KEY `id_book` (`id_book`),
-  KEY `cpf` (`cpf`),
+  KEY `id_user` (`id_user`),
   CONSTRAINT `book_user_ibfk_1` FOREIGN KEY (`id_book`) REFERENCES `books` (`id_book`),
-  CONSTRAINT `book_user_ibfk_2` FOREIGN KEY (`cpf`) REFERENCES `user` (`cpf`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `book_user_ibfk_2` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- Exportação de dados foi desmarcado.
 
 -- Copiando estrutura para tabela books.donation
 CREATE TABLE IF NOT EXISTS `donation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `isbn` varchar(80) NOT NULL,
+  `id_control` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
   `title` varchar(40) NOT NULL,
-  `city` varchar(30) NOT NULL,
-  `cep` int(11) NOT NULL,
-  `phone` varchar(17) NOT NULL,
-  `email` varchar(50) NOT NULL,
   `description` text NOT NULL,
   `category` varchar(30) NOT NULL,
   `image` char(1) NOT NULL,
-  `dateTime` date NOT NULL,
   `items` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`items`)),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `isbn` (`isbn`)
+  UNIQUE KEY `id_control` (`id_control`),
+  UNIQUE KEY `id_user` (`id_user`),
+  CONSTRAINT `donation_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Exportação de dados foi desmarcado.
@@ -78,6 +76,19 @@ CREATE TABLE IF NOT EXISTS `login` (
   `email` varchar(50) NOT NULL,
   `password` varchar(20) NOT NULL,
   PRIMARY KEY (`id_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Exportação de dados foi desmarcado.
+
+-- Copiando estrutura para tabela books.password_resets
+CREATE TABLE IF NOT EXISTS `password_resets` (
+  `id_password` int(11) NOT NULL AUTO_INCREMENT,
+  `id_register` int(11) DEFAULT NULL,
+  `new_user` varchar(20) NOT NULL,
+  `new_password` varchar(20) NOT NULL,
+  PRIMARY KEY (`id_password`),
+  KEY `id_register` (`id_register`),
+  CONSTRAINT `password_resets_ibfk_1` FOREIGN KEY (`id_register`) REFERENCES `register` (`id_register`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Exportação de dados foi desmarcado.
@@ -119,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `stock` (
   PRIMARY KEY (`id_stock`),
   KEY `id_book` (`id_book`),
   CONSTRAINT `stock_ibfk_1` FOREIGN KEY (`id_book`) REFERENCES `books` (`id_book`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- Exportação de dados foi desmarcado.
 
@@ -137,17 +148,32 @@ DELIMITER ;
 
 -- Copiando estrutura para tabela books.user
 CREATE TABLE IF NOT EXISTS `user` (
-  `cpf` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `cpf` varchar(14) NOT NULL,
   `type_user` varchar(15) DEFAULT NULL,
   `name` varchar(40) DEFAULT NULL,
   `adress` varchar(40) DEFAULT NULL,
   `cep` int(11) DEFAULT NULL,
   `phone` int(11) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`cpf`)
+  PRIMARY KEY (`id_user`),
+  UNIQUE KEY `cpf` (`cpf`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Exportação de dados foi desmarcado.
+
+-- Copiando estrutura para view books.vw_donationmg
+-- Criando tabela temporária para evitar erros de dependência de VIEW
+CREATE TABLE `vw_donationmg` (
+	`id_user` INT(11) NOT NULL,
+	`cpf` VARCHAR(14) NOT NULL COLLATE 'utf8mb4_general_ci',
+	`type_user` VARCHAR(15) NULL COLLATE 'utf8mb4_general_ci',
+	`name` VARCHAR(40) NULL COLLATE 'utf8mb4_general_ci',
+	`adress` VARCHAR(40) NULL COLLATE 'utf8mb4_general_ci',
+	`cep` INT(11) NULL,
+	`phone` INT(11) NULL,
+	`email` VARCHAR(50) NULL COLLATE 'utf8mb4_general_ci'
+) ENGINE=MyISAM;
 
 -- Copiando estrutura para trigger books.TG_AFTER_INSERT
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
@@ -169,6 +195,11 @@ CREATE TRIGGER TG_AFTER_INSERT AFTER INSERT
  	END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+-- Copiando estrutura para view books.vw_donationmg
+-- Removendo tabela temporária e criando a estrutura VIEW final
+DROP TABLE IF EXISTS `vw_donationmg`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vw_donationmg` AS SELECT * FROM user WHERE cep >= 30000000 AND cep <= 39999999 ;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

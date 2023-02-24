@@ -1,0 +1,6 @@
+ public void setPortas(int portas)
+    {
+        this.portas = portas;
+    }
+
+**O this é para pegar o valor da variável que está dentro da classe.

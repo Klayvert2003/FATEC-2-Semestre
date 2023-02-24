@@ -1,0 +1,65 @@
+HERANÇA:
+
+é uma técnica da programação orientada a objetos
+que permite um reaproveitamento de atributos e métodos.
+Para o uso da herança é necessário usar a palavra reservada 'EXTENDS'.
+
+
+-SOBRESCRITA- @OVERRIDE permite que um método já existente receba um novo comportamento.
+
+Exemplo Herança:
+
+public class Geral
+{
+   private int x
+   private String s;
+}
+
+public Geral(int x, String s)
+{
+   this.x = x;
+   this.s = s;
+}
+
+public int getX()
+{
+   return x;
+}
+
+public String getS()
+{
+   return s;
+}
+
+public void setX(int x)
+{
+   this.x = x;
+}
+
+
+public void setS(String s)
+{
+   this.s = s;
+}
+
+
+public void Imprimir()
+{
+   System.out.println("X:" + x);
+   System.out.println("S:" + s);
+}
+
+
+public class FilhaGeral EXTENDS Geral
+{
+   //aqui vão os códigos
+}
+
+
+
+Para acessar os métodos da SUPER CLASSE é necessário utilizar a palavra SUPER.
+
+a classe filha é chamada de SUB CLASSE.
+
+
+

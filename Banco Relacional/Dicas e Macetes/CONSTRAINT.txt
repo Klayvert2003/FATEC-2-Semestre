@@ -1,0 +1,59 @@
+CREATE TABLE t1
+(
+	a INT CHECK(a>2),
+	b INT CHECK(b>2),
+	CONSTRAINT a_maior CHECK(a>b)
+);
+
+CREATE TABLE Pai
+(
+	ID_Pai INTEGER NOT NULL,
+	Nome_Pai VARCHAR(40) NOT NULL,
+	CONSTRAINT PK_Pai PRIMARY KEY(ID_Pai)
+);
+
+
+CREATE TABLE Filho
+(
+	ID_Pai INTEGER NOT NULL,
+	ID_Filho INTEGER NOT NULL,
+	Nome_Filho VARCHAR(40) NOT NULL,
+	CONSTRAINT PK_Filho PRIMARY KEY(ID_Filho),
+	CONSTRAINT FK_Filho_Pai FOREIGN KEY(ID_Pai) REFERENCES pai(ID_Pai)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+);
+
+
+
+INSERT INTO pai VALUES (1, "jorgim kalahara");
+INSERT INTO pai VALUES (2, "latrel pereira da silva");
+INSERT INTO pai VALUES (3, "juliano cesar");
+INSERT INTO pai VALUES (4, "niltin the professor");
+
+
+INSERT INTO filho VALUES (1, 1, "marcio volatil");
+INSERT INTO filho VALUES (2, 3, "davy jaones");
+INSERT INTO filho VALUES (3, 2, "klauves");
+INSERT INTO filho VALUES (4, 4, "vinicius 13");
+
+
+UPDATE pai 
+SET id_pai = 10
+WHERE id_pai = 3
+
+ALTER TABLE pai 
+ADD cpf VARCHAR(14) NOT NULL 
+
+
+UPDATE pai 
+SET cpf = '243.446.712-00'
+WHERE id_pai = 10
+
+
+SELECT * FROM pai
+
+ALTER TABLE pai 
+ADD CONSTRAINT UNK_PAI UNIQUE (cpf) 
+
+INSERT INTO pai VALUES(5,'Testonauta', '243.446.712-00');

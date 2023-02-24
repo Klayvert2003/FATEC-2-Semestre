@@ -1,0 +1,146 @@
+Para criar PROCEDURE
+
+DELIMITER $$
+CREATE PROCEDURE Selecionar_Produtos(IN qtde INT)
+BEGIN
+	SELECT * FROM produto
+	WHERE id = idprod
+	LIMIT qtde;
+END $$
+DELIMITER ;
+
+Para chamar PROCEDURE
+
+CALL Selecionar_Produtos(4)
+
+Para subscrever alterando uma provcedure ja existente
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE Selecionar_Produtos(IN qtde INT, IN idprod INT)
+BEGIN
+	SELECT * FROM produto
+	WHERE id = idprod
+	LIMIT qtde;
+END $$
+DELIMITER ;
+
+CALL Selecionar_Produtos(4, 4)
+
+
+PROCEDURE retornando valor através da criação de variável
+
+DELIMITER $$
+CREATE PROCEDURE Verifica_Quantidade_Produto(OUT qtde INT)
+BEGIN
+	SELECT COUNT(*) INTO qtde FROM produto;
+END $$
+DELIMITER ;
+
+CALL Verifica_Quantidade_Produto(@q);
+SELECT @q;
+
+LOOPING com IF
+
+DELIMITER $$
+CREATE PROCEDURE Acumula(IN limite INT)
+BEGIN
+	DECLARE contador INT DEFAULT 0;
+	DECLARE soma INT DEFAULT 0;
+	
+	meu_loop: LOOP
+	  SET contador = contador + 1;
+	  SET soma = soma + contador;
+	  /*se o contador for maior que o limite então SAIA da LOOP*/
+	  IF contador >= limite THEN 
+	LEAVE meu_loop;
+	  END IF;
+	END LOOP meu_loop;
+	SELECT soma;
+END $$
+DELIMITER ;
+
+
+
+CALL Acumula(9);
+
+
+
+LOOPING COM WHILE
+
+DELIMITER $$
+CREATE PROCEDURE Acumula_While(IN limite INT)
+BEGIN
+	DECLARE contador INT DEFAULT 0;
+	DECLARE soma INT DEFAULT 0;
+	
+	  /*se o contador for maior que o limite então SAIA da LOOP*/
+	WHILE contador < limite DO
+	  SET contador = contador + 1;
+	  SET soma = soma + contador;
+	END while;
+	SELECT soma;
+END $$
+DELIMITER ;
+
+
+
+CALL Acumula_While(9);
+
+
+1)
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE Total_Produtos()
+BEGIN
+	SELECT 
+	MAX(p.id) AS IdVenda,
+	MAX(p.descricao) AS NomeProduto,
+	SUM(i.quantidade * p.precodevenda) AS ValorTotal
+FROM 
+	produto p, item i
+WHERE
+	p.id = i.idpedido
+GROUP BY
+	p.id;
+END $$
+DELIMITER ;
+
+CALL Total_Produtos();
+
+
+2)
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE Vendas_Efetuadas()
+BEGIN
+	SELECT 
+		MAX(p.id) AS NumeroPedido,
+		MAX(c.nome) AS NomeCliente,
+		SUM(i.quantidade * pr.precodevenda) AS ValorTotal
+FROM 
+	pedido p, cliente c, item i, produto pr
+WHERE
+	p.id = c.id = i.idpedido = pr.id 
+GROUP BY
+	p.id;
+END $$
+DELIMITER ;
+
+CALL Vendas_Efetuadas();
+
+
+
+SELECT 
+		MAX(p.id) AS NumeroPedido,
+		MAX(c.nome) AS NomeCliente,
+		SUM(i.quantidade * pr.precodevenda) AS ValorTotal
+FROM 
+	pedido p, cliente c, item i, produto pr
+WHERE
+	p.id = c.id = i.idpedido = pr.id 
+GROUP BY
+	p.id;
+	
+	
+	
+	
+	
+	
